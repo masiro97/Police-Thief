@@ -7,31 +7,24 @@
     android:orientation="vertical"
     tools:context="com.example.user.masiro.MainActivity">
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="GPS 에 수신된 현재위치"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+    <LinearLayout
+        android:id="@+id/fragmentHere"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1">
+        <TextView
+            android:text="여긴 Naver Map이 보여질 자리"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="결과창"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+    </LinearLayout>
 
-    <ToggleButton
-        android:id="@+id/toggle1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textOff="위치정보수신시작"
-        android:textOn="위치정보수신종료"/>
-
-
-    <!--<com.nhn.android.maps.NMapView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:id="@+id/mapView"/>-->
+    <Button
+        android:onClick="OnButton"
+        android:id="@+id/btn1"
+        android:text="Show Naver Map Fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

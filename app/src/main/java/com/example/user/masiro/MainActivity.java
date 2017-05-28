@@ -1,44 +1,99 @@
 package com.example.user.masiro;
 
+
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapView;
 
-public class MainActivity extends NMapActivity {
+import java.util.ArrayList;
 
-    TextView tv;
-    ToggleButton tb;
-    //private final Context mContext;
-//    boolean isGPSEnabled = false;
-//    boolean isNetworkEnabled = false;
-//    boolean isGetLocation = false; //GPS 상태값
+public class MainActivity extends AppCompatActivity{
 
-    private final LocationListener mLocationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            Log.d("test", "onLocationChanged, location:" + location);
-            double longitude = location.getLongitude(); //경도
-            double latitude = location.getLatitude();   //위도
-            double altitude = location.getAltitude();   //고도
-            float accuracy = location.getAccuracy();    //정확도
-            String provider = location.getProvider();   //위치제공자
-            tv.setText("위치정보 : " + provider + "\n위도 : " + longitude + "\n경도 : " + latitude
-                    + "\n고도 : " + altitude + "\n정확도 : "  + accuracy);
+    private LocationManager locationManager;
+    private ItemIntentReceiver mIntentReceiver;
+
+
+    public void OnButton(View v){
+
+        MapFragment fragment = new MapFragment();
+        fragment.setArguments(new Bundle());
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.add(R.id.fragmentHere, fragment);
+        fragmentTransaction.commit();
+
+        //startLocationService();
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
+    private void startLocationService() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        GPSListener gpsListener = new GPSListener();
+        long minTime = 10000;
+        float minDistance = 0;
+
+        try {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,minTime,
+                        minDistance,gpsListener);
+
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,minTime,
+                        minDistance,gpsListener);
+
+                Location lastlocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                if(lastlocation != null){
+
+                    Double latitude = lastlocation.getLatitude();
+                    Double longitude = lastlocation.getLongitude();
+
+                    String msg = "Latitude : " + latitude + " Longitude : " + longitude;
+                    Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+
+                }
+                return;
+            }
+
+        }catch (SecurityException ex){
+            ex.printStackTrace();
         }
 
+    }
 
+    private class GPSListener implements LocationListener {
+
+        @Override
+        public void onLocationChanged(Location location) {
+            Double latitude = location.getLatitude();
+            Double longitude = location.getLongitude();
+
+            String msg = "Latitude : " + latitude + " Longitude : " + longitude;
+            Log.i("GPSListener",msg);
+
+        }
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
 
@@ -53,39 +108,6 @@ public class MainActivity extends NMapActivity {
         public void onProviderDisabled(String provider) {
 
         }
-    };
-    public void OnButton(View v){
-        Intent intent = new Intent(MainActivity.this,MapActivity.class);
-        startActivity(intent);
     }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        tv = (TextView) findViewById(R.id.textView2);
-        tv.setText("위치정보 미수신중");
 
-        tb = (ToggleButton)findViewById(R.id.toggle1);
-
-        final LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-
-        tb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try{
-
-                    if(tb.isChecked()){
-                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,100,1,mLocationListener);
-                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,100,1,mLocationListener);
-                        Toast.makeText(getApplicationContext(),"Complete",Toast.LENGTH_SHORT).show();
-                    }
-                    else {locationManager.removeUpdates(mLocationListener);
-                        tv.setText("위치정보 미수신중");}
-
-                }
-                catch (SecurityException ex){}
-            }
-        });
-
-    }
 }
