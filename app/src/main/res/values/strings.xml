@@ -3,6 +3,9 @@
     <string name="title_activity_nmap">NMapActivity</string>
     <string name="title_activity_map_view">MapView</string>
 
+    <string name="hello">Hello World, NMapViewer!</string>
+    <string name="str_done">완료</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -10,6 +13,7 @@
     <string name="title_activity_map_acitivity">MapAcitivity</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="title_activity_login">Sign in</string>
+
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
