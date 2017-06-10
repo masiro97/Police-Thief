@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
 
     </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -23,6 +24,7 @@
 
     <style name="Button.Menu" parent="Button">
         <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:ellipsize">marquee</item>
         <item name="android:layout_gravity">center</item>
@@ -47,10 +49,5 @@
     </style>
 
     <style name="AppTheme.Dark" parent="android:style/Theme.Holo"/>
-    <!--<style name="Theme.NoShadow" parent="android:style/Theme.Light.NoTitleBar">-->
-        <!--<item name="android:windowContentOverlay">@android:color/transparent</item>-->
-    <!--</style>-->
-
-    <!--<style name="App.Theme" parent="android:style/Theme.Light.NoTitleBar"/>-->
 
 </resources>

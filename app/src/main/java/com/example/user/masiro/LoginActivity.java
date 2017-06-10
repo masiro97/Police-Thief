@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.nhn.android.naverlogin.OAuthLoginDefine;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
-import com.nhn.android.naverlogin.ui.OAuthLoginActivity;
 import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -30,13 +29,12 @@ import java.io.InputStream;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "OAuthSampleActivity";
-
     /**
      * client 정보를 넣어준다.
      */
     private static String OAUTH_CLIENT_ID = "uKeUnl_BDXO0Qx6FIpsd";
     private static String OAUTH_CLIENT_SECRET = "adVHUoX1Gd";
-    private static String OAUTH_CLIENT_NAME = "네이버 아이디로 로그인";
+    private static String OAUTH_CLIENT_NAME = "Rodedown";
 
     private TextView mApiResultText;
     private static OAuthLogin mOAuthLoginInstance;
@@ -120,14 +118,11 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     protected void onResume() {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onResume();
-
     }
-
     /**
      * startOAuthLoginActivity() 호출시 인자로 넘기거나, OAuthLoginButton 에 등록해주면 인증이 종료되는 걸 알 수 있다.
      */
@@ -143,6 +138,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(mContext,"이미 로그인 되어 있습니다.",Toast.LENGTH_SHORT).show();
 
             } else {
+
                 String errorCode = mOAuthLoginInstance.getLastErrorCode(mContext).getCode();
                 String errorDesc = mOAuthLoginInstance.getLastErrorDesc(mContext);
                 Toast.makeText(mContext, "errorCode:" + errorCode + ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT).show();
@@ -262,5 +258,4 @@ public class LoginActivity extends AppCompatActivity {
         birthday = f_array[8];
 
     }
-
 }

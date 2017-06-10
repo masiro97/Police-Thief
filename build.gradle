@@ -15,12 +15,11 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        flatDir {
-            dirs 'libs'
-        }
+//        flatDir {
+//            dirs 'libs'
+//        }
     }
 }
-
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

@@ -1,5 +1,6 @@
 package com.example.user.masiro;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.nhn.android.maps.NMapActivity;
@@ -23,6 +25,7 @@ import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapLocationManager;
 import com.nhn.android.maps.NMapOverlay;
 import com.nhn.android.maps.NMapOverlayItem;
+import com.nhn.android.maps.NMapProjection;
 import com.nhn.android.maps.NMapView;
 import com.nhn.android.maps.maplib.NGeoPoint;
 import com.nhn.android.maps.nmapmodel.NMapError;
@@ -40,6 +43,8 @@ import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 import com.nhn.android.mapviewer.overlay.NMapPathDataOverlay;
 
+import java.util.ArrayList;
+
 /**
  * Created by User on 2017-06-05.
  */
@@ -56,18 +61,13 @@ public class NMapViewer extends NMapActivity {
     private NMapController mMapController;
 
     private static final NGeoPoint NMAP_LOCATION_DEFAULT = new NGeoPoint(126.978371, 37.5666091);
-    private static final int NMAP_ZOOMLEVEL_DEFAULT = 11;
+    private static final int NMAP_ZOOMLEVEL_DEFAULT = 200;
     private static final int NMAP_VIEW_MODE_DEFAULT = NMapView.VIEW_MODE_VECTOR;
-    private static final boolean NMAP_TRAFFIC_MODE_DEFAULT = false;
-    private static final boolean NMAP_BICYCLE_MODE_DEFAULT = false;
 
     private static final String KEY_ZOOM_LEVEL = "NMapViewer.zoomLevel";
     private static final String KEY_CENTER_LONGITUDE = "NMapViewer.centerLongitudeE6";
     private static final String KEY_CENTER_LATITUDE = "NMapViewer.centerLatitudeE6";
     private static final String KEY_VIEW_MODE = "NMapViewer.viewMode";
-    private static final String KEY_TRAFFIC_MODE = "NMapViewer.trafficMode";
-    private static final String KEY_BICYCLE_MODE = "NMapViewer.bicycleMode";
-
     private SharedPreferences mPreferences;
 
     private NMapOverlayManager mOverlayManager;
@@ -83,9 +83,13 @@ public class NMapViewer extends NMapActivity {
 
     private static boolean USE_XML_LAYOUT = false;
 
+    //여기부터 근접경보 코드 시작
+
     /**
      * Called when the activity is first created.
      */
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,6 +155,22 @@ public class NMapViewer extends NMapActivity {
 
         // create my location overlay
         mMyLocationOverlay = mOverlayManager.createMyLocationOverlay(mMapLocationManager, mMapCompassManager);
+
+        if (mMapView.getMapProjection().isProjectionScaled()) {
+            if (mMapView.getMapProjection().isMapHD()) {
+                mMapView.setScalingFactor(2.0F, false);
+            } else {
+                mMapView.setScalingFactor(1.0F, false);
+            }
+        } else {
+            mMapView.setScalingFactor(2.0F, true);
+        }
+        mIsMapEnlared = mMapView.getMapProjection().isProjectionScaled();
+
+        //startMyLocation();
+
+        //여기부터는 근접경보 코드 시작
+
     }
 
     @Override
@@ -184,6 +204,7 @@ public class NMapViewer extends NMapActivity {
 
     private void startMyLocation() {
 
+        Toast.makeText(getApplicationContext(),"현재 위치를 찾습니다",Toast.LENGTH_SHORT).show();
         if (mMyLocationOverlay != null) {
             if (!mOverlayManager.hasOverlay(mMyLocationOverlay)) {
                 mOverlayManager.addOverlay(mMyLocationOverlay);
@@ -238,77 +259,6 @@ public class NMapViewer extends NMapActivity {
         }
     }
 
-    private void testPathDataOverlay() {
-
-        // set path data points
-        NMapPathData pathData = new NMapPathData(9);
-
-        pathData.initPathData();
-        pathData.addPathPoint(127.108099, 37.366034, NMapPathLineStyle.TYPE_SOLID);
-        pathData.addPathPoint(127.108088, 37.366043, 0);
-        pathData.addPathPoint(127.108079, 37.365619, 0);
-        pathData.addPathPoint(127.107458, 37.365608, 0);
-        pathData.addPathPoint(127.107232, 37.365608, 0);
-        pathData.addPathPoint(127.106904, 37.365624, 0);
-        pathData.addPathPoint(127.105933, 37.365621, NMapPathLineStyle.TYPE_DASH);
-        pathData.addPathPoint(127.105929, 37.366378, 0);
-        pathData.addPathPoint(127.106279, 37.366380, 0);
-        pathData.endPathData();
-
-        NMapPathDataOverlay pathDataOverlay = mOverlayManager.createPathDataOverlay(pathData);
-        if (pathDataOverlay != null) {
-
-            // add path data with polygon type
-            NMapPathData pathData2 = new NMapPathData(4);
-            pathData2.initPathData();
-            pathData2.addPathPoint(127.106, 37.367, NMapPathLineStyle.TYPE_SOLID);
-            pathData2.addPathPoint(127.107, 37.367, 0);
-            pathData2.addPathPoint(127.107, 37.368, 0);
-            pathData2.addPathPoint(127.106, 37.368, 0);
-            pathData2.endPathData();
-            pathDataOverlay.addPathData(pathData2);
-            // set path line style
-            NMapPathLineStyle pathLineStyle = new NMapPathLineStyle(mMapView.getContext());
-            pathLineStyle.setPataDataType(NMapPathLineStyle.DATA_TYPE_POLYGON);
-            pathLineStyle.setLineColor(0xA04DD2, 0xff);
-            pathLineStyle.setFillColor(0xFFFFFF, 0x00);
-            pathData2.setPathLineStyle(pathLineStyle);
-
-            // add circle data
-            NMapCircleData circleData = new NMapCircleData(1);
-            circleData.initCircleData();
-            circleData.addCirclePoint(127.1075, 37.3675, 50.0F);
-            circleData.endCircleData();
-            pathDataOverlay.addCircleData(circleData);
-            // set circle style
-            NMapCircleStyle circleStyle = new NMapCircleStyle(mMapView.getContext());
-            circleStyle.setLineType(NMapPathLineStyle.TYPE_DASH);
-            circleStyle.setFillColor(0x000000, 0x00);
-            circleData.setCircleStyle(circleStyle);
-
-            // show all path data
-            pathDataOverlay.showAllPathData(0);
-        }
-    }
-
-    private void testPathPOIdataOverlay() {
-
-        // set POI data
-        NMapPOIdata poiData = new NMapPOIdata(4, mMapViewerResourceProvider, true);
-        poiData.beginPOIdata(4);
-        poiData.addPOIitem(349652983, 149297368, "Pizza 124-456", NMapPOIflagType.FROM, null);
-        poiData.addPOIitem(349652966, 149296906, null, NMapPOIflagType.NUMBER_BASE + 1, null);
-        poiData.addPOIitem(349651062, 149296913, null, NMapPOIflagType.NUMBER_BASE + 999, null);
-        poiData.addPOIitem(349651376, 149297750, "Pizza 000-999", NMapPOIflagType.TO, null);
-        poiData.endPOIdata();
-
-        // create POI data overlay
-        NMapPOIdataOverlay poiDataOverlay = mOverlayManager.createPOIdataOverlay(poiData, null);
-
-        // set event listener to the overlay
-        poiDataOverlay.setOnStateChangeListener(onPOIdataStateChangeListener);
-
-    }
 
     private void testPOIdataOverlay() {
 
@@ -660,12 +610,8 @@ public class NMapViewer extends NMapActivity {
         int latitudeE6 = mPreferences.getInt(KEY_CENTER_LATITUDE, NMAP_LOCATION_DEFAULT.getLatitudeE6());
         int level = mPreferences.getInt(KEY_ZOOM_LEVEL, NMAP_ZOOMLEVEL_DEFAULT);
         int viewMode = mPreferences.getInt(KEY_VIEW_MODE, NMAP_VIEW_MODE_DEFAULT);
-        boolean trafficMode = mPreferences.getBoolean(KEY_TRAFFIC_MODE, NMAP_TRAFFIC_MODE_DEFAULT);
-        boolean bicycleMode = mPreferences.getBoolean(KEY_BICYCLE_MODE, NMAP_BICYCLE_MODE_DEFAULT);
 
         mMapController.setMapViewMode(viewMode);
-        mMapController.setMapViewTrafficMode(trafficMode);
-        mMapController.setMapViewBicycleMode(bicycleMode);
         mMapController.setMapCenter(new NGeoPoint(longitudeE6, latitudeE6), level);
 
         if (mIsMapEnlared) {
@@ -692,8 +638,6 @@ public class NMapViewer extends NMapActivity {
         edit.putInt(KEY_CENTER_LATITUDE, center.getLatitudeE6());
         edit.putInt(KEY_ZOOM_LEVEL, level);
         edit.putInt(KEY_VIEW_MODE, viewMode);
-        edit.putBoolean(KEY_TRAFFIC_MODE, trafficMode);
-        edit.putBoolean(KEY_BICYCLE_MODE, bicycleMode);
 
         edit.commit();
 
@@ -749,32 +693,9 @@ public class NMapViewer extends NMapActivity {
                 testPOIdataOverlay();
                 return true;
 
-            case R.id.action_path_data:
-                mOverlayManager.clearOverlays();
-
-                // add path data overlay
-                testPathDataOverlay();
-
-                // add path POI data overlay
-                testPathPOIdataOverlay();
-                return true;
-
             case R.id.action_floating_data:
                 mOverlayManager.clearOverlays();
                 testFloatingPOIdataOverlay();
-                return true;
-
-            case R.id.action_scale_factor:
-                if (mMapView.getMapProjection().isProjectionScaled()) {
-                    if (mMapView.getMapProjection().isMapHD()) {
-                        mMapView.setScalingFactor(2.0F, false);
-                    } else {
-                        mMapView.setScalingFactor(1.0F, false);
-                    }
-                } else {
-                    mMapView.setScalingFactor(2.0F, true);
-                }
-                mIsMapEnlared = mMapView.getMapProjection().isProjectionScaled();
                 return true;
 
             case R.id.action_auto_rotate:
@@ -794,7 +715,6 @@ public class NMapViewer extends NMapActivity {
                     mMapContainerView.requestLayout();
                 }
                 return true;
-
         }
         return false;
     }

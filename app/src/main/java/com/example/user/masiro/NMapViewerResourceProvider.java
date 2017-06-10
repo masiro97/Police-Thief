@@ -22,7 +22,7 @@ import com.nhn.android.mapviewer.overlay.NMapResourceProvider;
  */
 
 public class NMapViewerResourceProvider extends NMapResourceProvider implements
-        NMapCalloutCustomOldOverlay.ResourceProvider{
+        NMapCalloutCustomOldOverlay.ResourceProvider {
 
     private static final String LOG_TAG = "NMapViewerResourceProvider";
     private static final boolean DEBUG = false;
@@ -54,7 +54,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
      * Get drawable for markerId at focused state
      *
      * @param markerId unique id for POI or Number icons.
-     * @param focused true for focused state, false otherwise.
+     * @param focused  true for focused state, false otherwise.
      * @return
      */
     public Drawable getDrawable(int markerId, boolean focused, NMapOverlayItem item) {
@@ -173,10 +173,8 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
      * Find resource id corresponding to the markerId.
      *
      * @param markerId marker id for a NMapPOIitem.
-     * @param focused flag to indicated focused or normal state of this marker.
-     *
+     * @param focused  flag to indicated focused or normal state of this marker.
      * @return resource id for the given markerId.
-     *
      * @see NMapPOIflagType
      */
     @Override
@@ -204,8 +202,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
     }
 
     /**
-     * 	Set bounds for this marker depending on its shape.
-     *
+     * Set bounds for this marker depending on its shape.
      */
     @Override
     protected void setBounds(Drawable marker, int markerId, NMapOverlayItem item) {
@@ -355,7 +352,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
     public Drawable getCalloutBackground(NMapOverlayItem item) {
 
         if (item instanceof NMapPOIitem) {
-            NMapPOIitem poiItem = (NMapPOIitem)item;
+            NMapPOIitem poiItem = (NMapPOIitem) item;
 
             if (poiItem.showRightButton()) {
                 Drawable drawable = mContext.getResources().getDrawable(R.drawable.bg_speech);
@@ -371,7 +368,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
     @Override
     public String getCalloutRightButtonText(NMapOverlayItem item) {
         if (item instanceof NMapPOIitem) {
-            NMapPOIitem poiItem = (NMapPOIitem)item;
+            NMapPOIitem poiItem = (NMapPOIitem) item;
 
             if (poiItem.showRightButton()) {
                 return mContext.getResources().getString(R.string.str_done);
@@ -384,7 +381,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
     @Override
     public Drawable[] getCalloutRightButton(NMapOverlayItem item) {
         if (item instanceof NMapPOIitem) {
-            NMapPOIitem poiItem = (NMapPOIitem)item;
+            NMapPOIitem poiItem = (NMapPOIitem) item;
 
             if (poiItem.showRightButton()) {
                 Drawable[] drawable = new Drawable[3];
@@ -403,7 +400,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
     @Override
     public Drawable[] getCalloutRightAccessory(NMapOverlayItem item) {
         if (item instanceof NMapPOIitem) {
-            NMapPOIitem poiItem = (NMapPOIitem)item;
+            NMapPOIitem poiItem = (NMapPOIitem) item;
 
             if (poiItem.hasRightAccessory() && (poiItem.getRightAccessoryId() > 0)) {
                 Drawable[] drawable = new Drawable[3];

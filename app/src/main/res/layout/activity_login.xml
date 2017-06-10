@@ -1,114 +1,115 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:fillViewport="true"
-    tools:context="com.example.user.masiro.LoginActivity">
 
-    <LinearLayout
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+        tools:context="com.example.user.masiro.LoginActivity">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
 
-            <TextView
-                android:textSize="20dp"
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="UserId" />
+                android:orientation="horizontal">
 
-        </LinearLayout>
+                <TextView
+                    android:textSize="20dp"
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="로그인 된 아이디" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/editText"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Name" />
+                android:orientation="horizontal">
 
-        </LinearLayout>
+                <EditText
+                    android:id="@+id/editText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:text="Name" />
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal" >
+            </LinearLayout>
 
-            <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
-                android:id="@+id/buttonOAuthLoginImg"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal" >
-
-            <Button
-                android:id="@+id/buttonOAuthLogout"
-                style="@style/Button.Menu"
-                android:text="로그아웃" />
-
-            <Button
-                android:id="@+id/buttonOAuthDeleteToken"
-                style="@style/Button.Menu"
-                android:text="연동끊기" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal" >
-
-            <Button
-                android:id="@+id/buttonVerifier"
-                style="@style/Button.Menu"
-                android:text="API호출" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="0dip"
-            android:layout_weight="1" >
-
-            <TextView
-                android:id="@+id/api_result_text"
+            <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="vertical"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
+                    android:id="@+id/buttonOAuthLoginImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/buttonOAuthLogout"
+                    style="@style/Button.Menu"
+                    android:text="로그아웃"
+                    />
+
+                <Button
+                    android:id="@+id/buttonOAuthDeleteToken"
+                    style="@style/Button.Menu"
+                    android:text="연동끊기" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/buttonVerifier"
+                    style="@style/Button.Menu"
+                    android:text="API호출" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dip"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:id="@+id/api_result_text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="vertical"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="GAME START" />
 
         </LinearLayout>
 
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="GAME START" />
-
-    </LinearLayout>
-
-</ScrollView>
+    </ScrollView>
