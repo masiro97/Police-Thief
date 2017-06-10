@@ -20,10 +20,17 @@
         android:alphabeticShortcut="l"
         app:showAsAction="always"/>
 
+
+    <item android:id="@+id/action_drawer"
+        android:icon="@android:drawable/ic_menu_more"
+        android:title="drawer"
+        app:showAsAction="always"/>
+
     <item android:id="@+id/action_test"
         android:icon="@android:drawable/ic_menu_more"
         android:title="지도보기"
         app:showAsAction="always">
+
 
         <menu>
             <group>

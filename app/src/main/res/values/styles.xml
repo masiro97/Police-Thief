@@ -48,6 +48,6 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="AppTheme.Dark" parent="android:style/Theme.Holo"/>
+    <style name="App.Theme" parent="android:style/Theme.Holo"/>
 
 </resources>

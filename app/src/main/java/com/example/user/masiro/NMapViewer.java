@@ -4,19 +4,24 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.nhn.android.maps.NMapActivity;
@@ -81,34 +86,57 @@ public class NMapViewer extends NMapActivity {
     private NMapPOIdataOverlay mFloatingPOIdataOverlay;
     private NMapPOIitem mFloatingPOIitem;
 
-    private static boolean USE_XML_LAYOUT = false;
-
     //여기부터 근접경보 코드 시작
+
+    private final String[] navItems = {"GET ITEM", "ITEM LIST", "PRIVATE INFORMATION"};
+    private ListView lvNavList;
+    private DrawerLayout dlDrawer;
 
     /**
      * Called when the activity is first created.
      */
 
+    @Override
+    public void onBackPressed() {
+        if (dlDrawer.isDrawerOpen(lvNavList)) dlDrawer.closeDrawer(lvNavList);
+        else super.onBackPressed();
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+
+            switch (position) {
+                case 0:
+                    Toast.makeText(getApplicationContext(), "CASE 0", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case 1:
+                    Toast.makeText(getApplicationContext(), "CASE 1", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case 2:
+                    Toast.makeText(getApplicationContext(), "CASE 2", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            dlDrawer.closeDrawer(lvNavList);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (USE_XML_LAYOUT) {
-            Toast.makeText(getApplicationContext(), "USE", Toast.LENGTH_SHORT).show();
-            setContentView(R.layout.main);
-            mMapView = (NMapView) findViewById(R.id.mapView);
 
-        } else {
-            // create map view
-            mMapView = new NMapView(this);
-            // create parent view to rotate map view
-            mMapContainerView = new MapContainerView(this);
-            mMapContainerView.addView(mMapView);
+        Toast.makeText(getApplicationContext(), "USE", Toast.LENGTH_SHORT).show();
+        setContentView(R.layout.main);
+        mMapView = (NMapView) findViewById(R.id.mapView);
 
-            // set the activity content to the parent view
-            setContentView(mMapContainerView);
-        }
+        lvNavList = (ListView) findViewById(R.id.lv_activity_main_nav_list);
+        dlDrawer = (DrawerLayout) findViewById(R.id.dl_activity_main_drawer);
+        lvNavList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, navItems));
+        lvNavList.setOnItemClickListener(new NMapViewer.DrawerItemClickListener());
 
         // set a registered Client Id for Open MapViewer Library
         mMapView.setClientId(CLIENT_ID);
@@ -204,7 +232,7 @@ public class NMapViewer extends NMapActivity {
 
     private void startMyLocation() {
 
-        Toast.makeText(getApplicationContext(),"현재 위치를 찾습니다",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "현재 위치를 찾습니다", Toast.LENGTH_SHORT).show();
         if (mMyLocationOverlay != null) {
             if (!mOverlayManager.hasOverlay(mMyLocationOverlay)) {
                 mOverlayManager.addOverlay(mMyLocationOverlay);
@@ -225,9 +253,7 @@ public class NMapViewer extends NMapActivity {
                 }
 
                 mMapView.postInvalidate();
-            }
-
-            else {
+            } else {
                 //GPS 켜기ㅣㅣㅣ
                 boolean isMyLocationEnabled = mMapLocationManager.enableMyLocation(true);
 
@@ -696,6 +722,10 @@ public class NMapViewer extends NMapActivity {
             case R.id.action_floating_data:
                 mOverlayManager.clearOverlays();
                 testFloatingPOIdataOverlay();
+                return true;
+
+            case R.id.action_drawer:
+                dlDrawer.openDrawer(lvNavList);
                 return true;
 
             case R.id.action_auto_rotate:
