@@ -1,16 +1,13 @@
 package com.example.user.masiro;
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
@@ -20,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -30,31 +26,28 @@ import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapLocationManager;
 import com.nhn.android.maps.NMapOverlay;
 import com.nhn.android.maps.NMapOverlayItem;
-import com.nhn.android.maps.NMapProjection;
 import com.nhn.android.maps.NMapView;
 import com.nhn.android.maps.maplib.NGeoPoint;
 import com.nhn.android.maps.nmapmodel.NMapError;
 import com.nhn.android.maps.nmapmodel.NMapPlacemark;
-import com.nhn.android.maps.overlay.NMapCircleData;
-import com.nhn.android.maps.overlay.NMapCircleStyle;
 import com.nhn.android.maps.overlay.NMapPOIdata;
 import com.nhn.android.maps.overlay.NMapPOIitem;
-import com.nhn.android.maps.overlay.NMapPathData;
-import com.nhn.android.maps.overlay.NMapPathLineStyle;
 import com.nhn.android.mapviewer.overlay.NMapCalloutCustomOverlay;
 import com.nhn.android.mapviewer.overlay.NMapCalloutOverlay;
 import com.nhn.android.mapviewer.overlay.NMapMyLocationOverlay;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
-import com.nhn.android.mapviewer.overlay.NMapPathDataOverlay;
 
-import java.util.ArrayList;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Created by User on 2017-06-05.
  */
 
 public class NMapViewer extends NMapActivity {
+
     private static final String LOG_TAG = "NMapViewer";
     private static final boolean DEBUG = false;
 
@@ -86,15 +79,21 @@ public class NMapViewer extends NMapActivity {
     private NMapPOIdataOverlay mFloatingPOIdataOverlay;
     private NMapPOIitem mFloatingPOIitem;
 
-    //여기부터 근접경보 코드 시작
+    //Drawer
 
-    private final String[] navItems = {"GET ITEM", "ITEM LIST", "PRIVATE INFORMATION"};
+    private final String[] navItems = {"SAVE","ITEM LIST", "PRIVATE INFORMATION"};
+
     private ListView lvNavList;
     private DrawerLayout dlDrawer;
 
     /**
      * Called when the activity is first created.
      */
+
+    public void toastShow(String msg) {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -109,15 +108,32 @@ public class NMapViewer extends NMapActivity {
 
             switch (position) {
                 case 0:
-                    Toast.makeText(getApplicationContext(), "CASE 0", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "SAVE", Toast.LENGTH_SHORT).show();
+                    try {
+                        BufferedWriter bw = new BufferedWriter(new FileWriter(getFilesDir() +
+                                "test.txt", true));
+
+                        String info = "lv=" + "exp=";
+                        bw.write(info);
+                        bw.close();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                     break;
 
                 case 1:
-                    Toast.makeText(getApplicationContext(), "CASE 1", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "ITEM LIST", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(NMapViewer.this,DrawerItem.class);
+                    startActivity(intent);
+
                     break;
 
                 case 2:
-                    Toast.makeText(getApplicationContext(), "CASE 2", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "PRIVATE INFORMATION", Toast.LENGTH_SHORT).show();
+                    Intent intent2 = new Intent(NMapViewer.this,DrawerItem.class);
+                    startActivity(intent2);
                     break;
             }
             dlDrawer.closeDrawer(lvNavList);
@@ -128,8 +144,6 @@ public class NMapViewer extends NMapActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        Toast.makeText(getApplicationContext(), "USE", Toast.LENGTH_SHORT).show();
         setContentView(R.layout.main);
         mMapView = (NMapView) findViewById(R.id.mapView);
 
@@ -195,10 +209,6 @@ public class NMapViewer extends NMapActivity {
         }
         mIsMapEnlared = mMapView.getMapProjection().isProjectionScaled();
 
-        //startMyLocation();
-
-        //여기부터는 근접경보 코드 시작
-
     }
 
     @Override
@@ -226,6 +236,22 @@ public class NMapViewer extends NMapActivity {
         // save map view state such as map center position and zoom level.
         saveInstanceState();
         super.onDestroy();
+    }
+    public static double calcDistance(double lat1, double lon1, double lat2, double lon2){
+        double EARTH_R, Rad, radLat1, radLat2, radDist;
+        double distance, ret;
+
+        EARTH_R = 6371000.0;
+        Rad = Math.PI/180;
+        radLat1 = Rad * lat1;
+        radLat2 = Rad * lat2;
+        radDist = Rad * (lon1 - lon2);
+
+        distance = Math.sin(radLat1) * Math.sin(radLat2);
+        distance = distance + Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radDist);
+        ret = EARTH_R * Math.acos(distance);
+
+        return ret;
     }
 
 	/* Test Functions */
@@ -285,7 +311,6 @@ public class NMapViewer extends NMapActivity {
         }
     }
 
-
     private void testPOIdataOverlay() {
 
         // Markers for POI item
@@ -294,9 +319,32 @@ public class NMapViewer extends NMapActivity {
         // set POI data
         NMapPOIdata poiData = new NMapPOIdata(2, mMapViewerResourceProvider);
         poiData.beginPOIdata(2);
-        NMapPOIitem item = poiData.addPOIitem(127.0630205, 37.5091300, "Pizza 777-111", markerId, 0);
+        NMapPOIitem item = poiData.addPOIitem(126.837131, 37.297727, "ITEM", markerId, 0);
         item.setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
-        poiData.addPOIitem(127.061, 37.51, "Pizza 123-456", markerId, 0);
+
+        poiData.addPOIitem(126.835854, 37.298199, "ITEM", markerId, 0)
+                .setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
+        poiData.addPOIitem(126.837726, 37.29854, "ITEM", markerId, 0)
+                .setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
+        poiData.addPOIitem(126.835267, 37.296705, "ITEM", markerId, 0)
+                .setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
+        poiData.addPOIitem(126.83589, 37.298713, "ITEM", markerId, 0)
+                .setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
+        poiData.addPOIitem(126.836011, 37.299762, "ITEM", markerId, 0)
+                .setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
+        poiData.addPOIitem(126.834948, 37.300265, "ITEM", markerId, 0)
+                .setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
+        poiData.addPOIitem(126.834455, 37.298038, "ITEM", markerId, 0)
+                .setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
+        poiData.addPOIitem(126.837184, 37.295594, "ITEM", markerId, 0)
+                .setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
+        poiData.addPOIitem(126.83892, 37.296295, "ITEM", markerId, 0)
+                .setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
+        poiData.addPOIitem(126.836578, 37.297244, "ITEM", markerId, 0)
+                .setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
+        poiData.addPOIitem(126.83686, 37.299027, "ITEM", markerId, 0)
+                .setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
+
         poiData.endPOIdata();
 
         // create POI data overlay
@@ -309,7 +357,7 @@ public class NMapViewer extends NMapActivity {
         poiDataOverlay.selectPOIitem(0, true);
 
         // show all POI data
-        //poiDataOverlay.showAllPOIdata(0);
+        poiDataOverlay.showAllPOIdata(0);
     }
 
     private void testFloatingPOIdataOverlay() {
@@ -519,7 +567,29 @@ public class NMapViewer extends NMapActivity {
             }
 
             // [[TEMP]] handle a click event of the callout
-            Toast.makeText(NMapViewer.this, "onCalloutClick: " + item.getTitle(), Toast.LENGTH_LONG).show();
+            NGeoPoint point = item.getPoint();
+            NGeoPoint mypoint = mMapLocationManager.getMyLocation();
+
+            if(mypoint == null) startMyLocation();
+
+            else{
+                Double lat = point.getLatitude();
+                Double lon = point.getLongitude();
+                Double mlat = mypoint.getLatitude();
+                Double mlon = mypoint.getLongitude();
+
+                double distance = calcDistance(lat,lon,mlat,mlon);
+
+                if(distance < 10){
+                    int p = (int)(Math.random() * 100);
+                    String geo = Double.toString(lat) + "  " + Double.toString(lon);
+                    ListItem listitem = new ListItem(getApplicationContext(),"ItemLog.db",null,1);
+                    listitem.insert(geo,p);
+                    toastShow("GET ITEM!! " + Integer.toString(p));
+                }
+                else toastShow("Fail : " + Double.toString(distance));
+
+            }
         }
 
         @Override
@@ -655,8 +725,6 @@ public class NMapViewer extends NMapActivity {
         NGeoPoint center = mMapController.getMapCenter();
         int level = mMapController.getZoomLevel();
         int viewMode = mMapController.getMapViewMode();
-        boolean trafficMode = mMapController.getMapViewTrafficMode();
-        boolean bicycleMode = mMapController.getMapViewBicycleMode();
 
         SharedPreferences.Editor edit = mPreferences.edit();
 

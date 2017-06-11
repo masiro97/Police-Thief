@@ -57,24 +57,8 @@
                 style="@style/Button.Menu"
                 android:text="로그아웃" />
 
-            <Button
-                android:id="@+id/buttonOAuthDeleteToken"
-                style="@style/Button.Menu"
-                android:text="연동끊기" />
-
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/buttonVerifier"
-                style="@style/Button.Menu"
-                android:text="API호출" />
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"

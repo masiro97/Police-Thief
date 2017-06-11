@@ -1,10 +1,13 @@
 package com.example.user.masiro;
 
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -12,69 +15,45 @@ import java.util.ArrayList;
  * Created by User on 2017-05-28.
  */
 
-public class NAdapter extends BaseAdapter implements Filterable {
+public class NAdapter extends BaseAdapter {
 
-    ArrayList<Person> arr = new ArrayList<Person>();
-    ArrayList<Person> filtered = arr;
-    Filter listFilter;
+    ArrayList<Item> arr = new ArrayList<Item>();
+    Context context;
+
+    public NAdapter(ArrayList<Item> arr, Context context) {
+        this.arr = arr;
+        this.context = context;
+    }
 
     @Override
     public int getCount() {
-        return 0;
+        return arr.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return arr.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
+
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return null;
-    }
+        if(convertView == null) convertView = LayoutInflater.from(context).inflate(R.layout.list_item,null);
 
-    @Override
-    public Filter getFilter() {
-        if (listFilter == null) listFilter = new ListFilter();
-        return listFilter;
+        TextView geo = (TextView)convertView.findViewById(R.id.textView);
+        TextView point = (TextView)convertView.findViewById(R.id.textView2);
 
-    }
+        Item item = arr.get(position);
+        geo.setText(item.getGeopoint());
+        point.setText(item.getPoint());
 
-    private class ListFilter extends Filter {
-
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            FilterResults results = new FilterResults();
-            if (constraint == null || constraint.length() == 0) {
-                results.values = arr;
-                results.count = arr.size();
-            } else {
-                ArrayList<Person> itemList = new ArrayList<Person>();
-
-
-                for (Person data : arr) {
-                    if (data.getID().toUpperCase().contains(constraint.toString()
-                            .toUpperCase()))
-                        itemList.add(data);
-                }
-                results.values = itemList;
-                results.count = itemList.size();
-            }
-            return results;
-        }
-
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            filtered = (ArrayList<Person>) results.values;
-            if (results.count >= 0) notifyDataSetChanged();
-            else notifyDataSetInvalidated();
-        }
+        return convertView;
     }
 
 }

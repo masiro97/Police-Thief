@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     private OAuthLoginButton mOAuthLoginButton;
     EditText et;
     String about = ""; // 게임 설명
+    public Boolean isLogin = false;
 
     //Personal Data
 
@@ -91,11 +92,17 @@ public class LoginActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this,NMapViewer.class);
-                startActivity(intent);
-                finish();
+
+                new RequestApiTask().execute();
+                if(isLogin){
+                    Intent intent = new Intent(LoginActivity.this,NMapViewer.class);
+                    startActivity(intent);
+                    finish();
+                }
+
             }
         });
+
     }
 
     private void initData() {
@@ -112,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
     private void initView() {
         mApiResultText = (TextView) findViewById(R.id.api_result_text);
         et = (EditText)findViewById(R.id.editText);
-
+        et.setText(id);
         mOAuthLoginButton = (OAuthLoginButton) findViewById(R.id.buttonOAuthLoginImg);
         mOAuthLoginButton.setOAuthLoginHandler(mOAuthLoginHandler);
 
@@ -126,16 +133,13 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * startOAuthLoginActivity() 호출시 인자로 넘기거나, OAuthLoginButton 에 등록해주면 인증이 종료되는 걸 알 수 있다.
      */
-    static private OAuthLoginHandler mOAuthLoginHandler = new OAuthLoginHandler() {
+    private OAuthLoginHandler mOAuthLoginHandler = new OAuthLoginHandler() {
         @Override
         public void run(boolean success) {
             if (success) {
-                String accessToken = mOAuthLoginInstance.getAccessToken(mContext);
-                String refreshToken = mOAuthLoginInstance.getRefreshToken(mContext);
-                long expiresAt = mOAuthLoginInstance.getExpiresAt(mContext);
-                String tokenType = mOAuthLoginInstance.getTokenType(mContext);
-
-                Toast.makeText(mContext,"이미 로그인 되어 있습니다.",Toast.LENGTH_SHORT).show();
+                isLogin = true;
+                et.setText(id);
+                Toast.makeText(mContext,"Login에 성공했습니다",Toast.LENGTH_SHORT).show();
 
             } else {
 
@@ -150,12 +154,12 @@ public class LoginActivity extends AppCompatActivity {
     public void onButtonClick(View v) throws Throwable {
 
         switch (v.getId()) {
-            case R.id.buttonVerifier: {
-                new RequestApiTask().execute();
-                break;
-            }
+
             case R.id.buttonOAuthLogout: {
                 mOAuthLoginInstance.logout(mContext);
+                Toast.makeText(getApplicationContext(),"Logout에 성공했습니다",Toast.LENGTH_SHORT).show();
+                isLogin = false;
+                et.setText(null);
                 break;
             }
             default:
@@ -176,8 +180,8 @@ public class LoginActivity extends AppCompatActivity {
             return mOAuthLoginInstance.requestApi(mContext, at, url);
         }
         protected void onPostExecute(String content) {
-            mApiResultText.setText((String)content);
             Pasingversiondata(content);
+            et.setText(id);
         }
     }
 
