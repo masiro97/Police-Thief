@@ -1,6 +1,8 @@
 package com.example.user.masiro;
 
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,10 +17,23 @@ public class ItemActivity extends AppCompatActivity {
 
     public void OnButton(View v){
 
-        ListItem listitem = new ListItem(getApplicationContext(),"ItemLog.db",null,1);
-        listitem.deleteAll();
-        info.clear();
-        adapter.notifyDataSetChanged();
+        AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+        dlg.setTitle("Rodedown");
+        dlg.setMessage("전체 삭제를 하면 level과 point가 초기화 됩니다\n" +
+                "계속 진행하시겠습니까?");
+        dlg.setNegativeButton("Close",null);
+        dlg.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                ListItem listitem = new ListItem(getApplicationContext(),"ItemLog.db",null,1);
+                listitem.deleteAll();
+                info.clear();
+                adapter.notifyDataSetChanged();
+
+            }
+        });
+        dlg.show();
 
     }
 
@@ -26,7 +41,7 @@ public class ItemActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item);
-
+        setTitle("Rodedown");
         list = (ListView)findViewById(R.id.listview);
 
         ListItem listitem = new ListItem(getApplicationContext(),"ItemLog.db",null,1);

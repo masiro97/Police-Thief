@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
 
         OAuthLoginDefine.DEVELOPER_VERSION = true;
         mContext = this;
-
+        setTitle("Rodedown");
         initData();
         initView();
 

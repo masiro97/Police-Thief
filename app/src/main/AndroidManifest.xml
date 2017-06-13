@@ -36,8 +36,10 @@
             android:configChanges="keyboardHidden|orientation"
             android:theme="@android:style/Theme.Holo.Light.DarkActionBar">
 
+
         </activity>
         <activity android:name=".LoginActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -53,10 +55,6 @@
             android:label="OAuth2.0 In-app" />
         <!-- [naveroauthlogin][end] -->
 
-        <activity android:name=".DrawerItem"></activity>
-        <activity android:name=".MainActivity">
-
-        </activity>
         <activity android:name=".InformationActivity"></activity>
         <activity android:name=".ItemActivity"></activity>
     </application>

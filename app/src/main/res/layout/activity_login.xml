@@ -7,6 +7,7 @@
     tools:context="com.example.user.masiro.LoginActivity">
 
     <LinearLayout
+
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:focusable="true"
@@ -14,26 +15,31 @@
         android:orientation="vertical">
 
             <TextView
+
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="5dp"
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:text="USER ID"
                 android:textSize="20dp" />
 
 
             <EditText
+
+                android:layout_marginLeft="5dp"
                 android:id="@+id/editText"
+                android:background="#ffa880"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:hint="LOGIN ID" />
 
+
         <LinearLayout
             android:layout_marginBottom="20dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="80dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -54,6 +60,7 @@
             android:orientation="horizontal">
 
             <Button
+                android:onClick="onButtonClick"
                 android:id="@+id/buttonOAuthLogout"
                 android:layout_width="240dp"
                 android:layout_height="50dp"
@@ -77,7 +84,7 @@
         </LinearLayout>
 
         <Button
-            android:layout_marginBottom="150dp"
+            android:layout_marginBottom="200dp"
             android:id="@+id/button"
             android:layout_gravity="center_horizontal"
             android:layout_width="240dp"

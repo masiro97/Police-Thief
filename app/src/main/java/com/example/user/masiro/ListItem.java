@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -54,6 +55,18 @@ public class ListItem extends SQLiteOpenHelper {
             result += cursor.getString(0) + ":" + cursor.getString(1) + "," +cursor.getString(2) + "\n";
         }
         return result;
+    }
+
+    public int getPoint(){
+
+        SQLiteDatabase db = getReadableDatabase();
+        int point = 0;
+
+        Cursor cursor = db.rawQuery("select * from ItemLog",null);
+        while(cursor.moveToNext()){
+            point += cursor.getInt(2);
+        }
+        return point;
     }
 
 }

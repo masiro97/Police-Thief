@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nhn.android.maps.NMapActivity;
@@ -86,13 +88,16 @@ public class NMapViewer extends NMapActivity {
 
     //Drawer
 
-    private final String[] navItems = {"SAVE","ITEM LIST", "PRIVATE INFORMATION"};
+    private final String[] navItems = {"SAVE", "ITEM LIST", "PRIVATE INFORMATION"};
 
     private ListView lvNavList;
     private DrawerLayout dlDrawer;
     String info = "";
-    Person user;
     ProgressBar exp;
+    TextView tv;
+    int level =1;
+    int curpoint = 0;
+    int required_exp = 0;
 
     /**
      * Called when the activity is first created.
@@ -115,21 +120,39 @@ public class NMapViewer extends NMapActivity {
 
             switch (position) {
                 case 0:
+                    ListItem pointitem = new ListItem(getApplicationContext(), "ItemLog.db", null, 1);
+                    int totalpoint = pointitem.getPoint();
+                    curpoint =totalpoint;
+                    for(int i =1; i<100; i++){
+                        if(totalpoint - 100*Math.pow(1.5,i) > 0){
+                            totalpoint = (int)(totalpoint - 100 * Math.pow(1.5,i));
+                            i++;
+                        }
+                        else {
+                            level = i;
+                            curpoint = totalpoint;
+                            int required_exp = (int)(100 * Math.pow(1.5,level));
+                            int percent = (int)(curpoint  * 100 / required_exp);
+                            exp.setProgress(percent);
+                            tv.setText("LV  " + level);
+                            break;
+                        }
+                    }
                     Toast.makeText(getApplicationContext(), "SAVE", Toast.LENGTH_SHORT).show();
+                    break;
 
                 case 1:
-                    Intent intent = new Intent(NMapViewer.this,ItemActivity.class);
+                    Intent intent = new Intent(NMapViewer.this, ItemActivity.class);
                     startActivity(intent);
                     break;
 
                 case 2:
                     Intent intent1 = getIntent();
                     info = intent1.getStringExtra("information");
-                    Intent intent2 = new Intent(NMapViewer.this,InformationActivity.class);
-                    intent2.putExtra("information",info);
-                    startActivityForResult(intent2,20);
+                    Intent intent2 = new Intent(NMapViewer.this, InformationActivity.class);
+                    intent2.putExtra("information", info);
+                    startActivityForResult(intent2, 20);
                     break;
-
             }
 
             dlDrawer.closeDrawer(lvNavList);
@@ -139,10 +162,31 @@ public class NMapViewer extends NMapActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.main);
+        setTitle("Rodedown");
+
         mMapView = (NMapView) findViewById(R.id.mapView);
-        exp = (ProgressBar)findViewById(R.id.progressBar);
+        exp = (ProgressBar) findViewById(R.id.progressBar);
+        tv = (TextView)findViewById(R.id.textView);
+
+        ListItem pointitem = new ListItem(getApplicationContext(), "ItemLog.db", null, 1);
+        int totalpoint = pointitem.getPoint();
+        curpoint =totalpoint;
+        for(int i =1; i<100; i++){
+            if(totalpoint - 100*Math.pow(1.5,i) > 0){
+                totalpoint = (int)(totalpoint - 100 * Math.pow(1.5,i));
+                i++;
+            }
+            else {
+                level = i;
+                curpoint = totalpoint;
+                required_exp = (int)(100 * Math.pow(1.5,level));
+                int percent = (int)(curpoint  * 100 / required_exp);
+                exp.setProgress(percent);
+                tv.setText("LV  " + level);
+                break;
+            }
+        }
 
         lvNavList = (ListView) findViewById(R.id.lv_activity_main_nav_list);
         dlDrawer = (DrawerLayout) findViewById(R.id.dl_activity_main_drawer);
@@ -235,12 +279,13 @@ public class NMapViewer extends NMapActivity {
         saveInstanceState();
         super.onDestroy();
     }
-    public static double calcDistance(double lat1, double lon1, double lat2, double lon2){
+
+    public static double calcDistance(double lat1, double lon1, double lat2, double lon2) {
         double EARTH_R, Rad, radLat1, radLat2, radDist;
         double distance, ret;
 
         EARTH_R = 6371000.0;
-        Rad = Math.PI/180;
+        Rad = Math.PI / 180;
         radLat1 = Rad * lat1;
         radLat2 = Rad * lat2;
         radDist = Rad * (lon1 - lon2);
@@ -568,28 +613,56 @@ public class NMapViewer extends NMapActivity {
             NGeoPoint point = item.getPoint();
             NGeoPoint mypoint = mMapLocationManager.getMyLocation();
 
-            if(mypoint == null) startMyLocation();
+            if (mypoint == null) startMyLocation();
 
-            else{
+            else {
                 Double lat = point.getLatitude();
                 Double lon = point.getLongitude();
                 Double mlat = mypoint.getLatitude();
                 Double mlon = mypoint.getLongitude();
 
-                double distance = calcDistance(lat,lon,mlat,mlon);
+                double distance = calcDistance(lat, lon, mlat, mlon);
 
-                if(distance < 10){
-                    int p = (int)(Math.random() * 100);
+                if (distance < 10) {
+                    int p = (int) (Math.random() * 100);
                     String geo = Double.toString(lat) + " " + Double.toString(lon);
-                    ListItem listitem = new ListItem(getApplicationContext(),"ItemLog.db",null,1);
+                    ListItem listitem = new ListItem(getApplicationContext(), "ItemLog.db", null, 1);
                     String isvalid = listitem.getResult();
-                    if(isvalid.contains(geo)) toastShow("Fail : Already Exist");
+
+                    if (isvalid.contains(geo)) toastShow("Fail : Already Exist");
+
                     else {
-                        listitem.insert(geo,p);
+
+                        listitem.insert(geo, p);
+                        curpoint = curpoint + p;
+
+                        if(curpoint > required_exp) {
+
+                            level = level + 1;
+                            curpoint = curpoint - required_exp;
+                            required_exp = (int)(100 * Math.pow(1.5,level));
+                            int percent = (int)(curpoint  * 100 / required_exp);
+                            exp.setProgress(percent);
+                            tv.setText("LV " + level);
+
+                            AlertDialog.Builder dlg = new AlertDialog.Builder(getApplicationContext());
+                            dlg.setTitle("Rodedown");
+                            dlg.setMessage("Level UP !!!");
+                            dlg.setNegativeButton("OK",null);
+                            dlg.setPositiveButton("Close",null);
+                            dlg.show();
+
+                        }
+
+                        else{
+
+                            int percent = (int)(curpoint  * 100 / required_exp);
+                            exp.setProgress(percent);
+                        }
+
                         toastShow("GET ITEM!! " + Integer.toString(p));
                     }
-                }
-                else toastShow("Fail : " + Double.toString(distance));
+                } else toastShow("Fail : " + Double.toString(distance));
             }
         }
 
