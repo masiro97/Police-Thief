@@ -29,7 +29,7 @@
 
                 android:layout_marginLeft="5dp"
                 android:id="@+id/editText"
-                android:background="#ffa880"
+                android:background="#f4dc9f"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:ems="10"

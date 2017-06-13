@@ -121,17 +121,17 @@ public class NMapViewer extends NMapActivity {
             switch (position) {
                 case 0:
                     ListItem pointitem = new ListItem(getApplicationContext(), "ItemLog.db", null, 1);
-                    int totalpoint = pointitem.getPoint();
-                    curpoint =totalpoint;
+                    double totalpoint = pointitem.getPoint();
+                    curpoint =(int) totalpoint;
                     for(int i =1; i<100; i++){
                         if(totalpoint - 100*Math.pow(1.5,i) > 0){
-                            totalpoint = (int)(totalpoint - 100 * Math.pow(1.5,i));
+                            totalpoint = totalpoint - 100 * Math.pow(1.5,i);
                             i++;
                         }
                         else {
                             level = i;
-                            curpoint = totalpoint;
-                            int required_exp = (int)(100 * Math.pow(1.5,level));
+                            curpoint = (int)totalpoint;
+                            required_exp = (int)(100 * Math.pow(1.5,level));
                             int percent = (int)(curpoint  * 100 / required_exp);
                             exp.setProgress(percent);
                             tv.setText("LV  " + level);
@@ -170,16 +170,16 @@ public class NMapViewer extends NMapActivity {
         tv = (TextView)findViewById(R.id.textView);
 
         ListItem pointitem = new ListItem(getApplicationContext(), "ItemLog.db", null, 1);
-        int totalpoint = pointitem.getPoint();
-        curpoint =totalpoint;
+        double totalpoint = pointitem.getPoint();
+        curpoint =(int) totalpoint;
         for(int i =1; i<100; i++){
             if(totalpoint - 100*Math.pow(1.5,i) > 0){
-                totalpoint = (int)(totalpoint - 100 * Math.pow(1.5,i));
+                totalpoint = totalpoint - 100 * Math.pow(1.5,i);
                 i++;
             }
             else {
                 level = i;
-                curpoint = totalpoint;
+                curpoint = (int)totalpoint;
                 required_exp = (int)(100 * Math.pow(1.5,level));
                 int percent = (int)(curpoint  * 100 / required_exp);
                 exp.setProgress(percent);
@@ -624,7 +624,7 @@ public class NMapViewer extends NMapActivity {
                 double distance = calcDistance(lat, lon, mlat, mlon);
 
                 if (distance < 10) {
-                    int p = (int) (Math.random() * 100);
+                    int p = (int) (Math.random() * 1000);
                     String geo = Double.toString(lat) + " " + Double.toString(lon);
                     ListItem listitem = new ListItem(getApplicationContext(), "ItemLog.db", null, 1);
                     String isvalid = listitem.getResult();
@@ -638,19 +638,26 @@ public class NMapViewer extends NMapActivity {
 
                         if(curpoint > required_exp) {
 
-                            level = level + 1;
-                            curpoint = curpoint - required_exp;
-                            required_exp = (int)(100 * Math.pow(1.5,level));
-                            int percent = (int)(curpoint  * 100 / required_exp);
-                            exp.setProgress(percent);
-                            tv.setText("LV " + level);
+                            ListItem pointitem = new ListItem(getApplicationContext(), "ItemLog.db", null, 1);
+                            double totalpoint = pointitem.getPoint();
+                            curpoint =(int) totalpoint;
+                            for(int i =1; i<100; i++){
+                                if(totalpoint - 100*Math.pow(1.5,i) > 0){
+                                    totalpoint = totalpoint - 100 * Math.pow(1.5,i);
+                                    i++;
+                                }
+                                else {
+                                    level = i;
+                                    curpoint = (int)totalpoint;
+                                    required_exp = (int)(100 * Math.pow(1.5,level));
+                                    int percent = (int)(curpoint  * 100 / required_exp);
+                                    exp.setProgress(percent);
+                                    tv.setText("LV  " + level);
+                                    break;
+                                }
+                            }
 
-                            AlertDialog.Builder dlg = new AlertDialog.Builder(getApplicationContext());
-                            dlg.setTitle("Rodedown");
-                            dlg.setMessage("Level UP !!!");
-                            dlg.setNegativeButton("OK",null);
-                            dlg.setPositiveButton("Close",null);
-                            dlg.show();
+                            toastShow("LEVEL UP !!!");
 
                         }
 
@@ -873,18 +880,13 @@ public class NMapViewer extends NMapActivity {
             case R.id.action_auto_rotate:
                 if (mMapView.isAutoRotateEnabled()) {
                     mMapView.setAutoRotateEnabled(false, false);
-
-                    mMapContainerView.requestLayout();
-
                     mHnadler.removeCallbacks(mTestAutoRotation);
                 } else {
 
                     mMapView.setAutoRotateEnabled(true, false);
-
                     mMapView.setRotateAngle(30);
                     mHnadler.postDelayed(mTestAutoRotation, AUTO_ROTATE_INTERVAL);
 
-                    mMapContainerView.requestLayout();
                 }
                 return true;
         }
