@@ -26,16 +26,17 @@
                 android:text="LV. 1" />
 
             <ProgressBar
-                android:progress="0"
-                android:max="100"
                 android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
-                android:layout_weight="1" />
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="50dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:max="100"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:progressDrawable="@drawable/progressbar_progressbar1" />
+
 
         </LinearLayout>
 

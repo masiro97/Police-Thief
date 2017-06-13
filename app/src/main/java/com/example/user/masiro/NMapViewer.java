@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.nhn.android.maps.NMapActivity;
@@ -38,7 +39,11 @@ import com.nhn.android.mapviewer.overlay.NMapMyLocationOverlay;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -85,6 +90,9 @@ public class NMapViewer extends NMapActivity {
 
     private ListView lvNavList;
     private DrawerLayout dlDrawer;
+    String info = "";
+    Person user;
+    ProgressBar exp;
 
     /**
      * Called when the activity is first created.
@@ -93,7 +101,6 @@ public class NMapViewer extends NMapActivity {
     public void toastShow(String msg) {
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
-
 
     @Override
     public void onBackPressed() {
@@ -109,33 +116,22 @@ public class NMapViewer extends NMapActivity {
             switch (position) {
                 case 0:
                     Toast.makeText(getApplicationContext(), "SAVE", Toast.LENGTH_SHORT).show();
-                    try {
-                        BufferedWriter bw = new BufferedWriter(new FileWriter(getFilesDir() +
-                                "test.txt", true));
-
-                        String info = "lv=" + "exp=";
-                        bw.write(info);
-                        bw.close();
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    break;
 
                 case 1:
-                    Toast.makeText(getApplicationContext(), "ITEM LIST", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(NMapViewer.this,DrawerItem.class);
+                    Intent intent = new Intent(NMapViewer.this,ItemActivity.class);
                     startActivity(intent);
-
                     break;
 
                 case 2:
-                    Toast.makeText(getApplicationContext(), "PRIVATE INFORMATION", Toast.LENGTH_SHORT).show();
-                    Intent intent2 = new Intent(NMapViewer.this,DrawerItem.class);
-                    startActivity(intent2);
+                    Intent intent1 = getIntent();
+                    info = intent1.getStringExtra("information");
+                    Intent intent2 = new Intent(NMapViewer.this,InformationActivity.class);
+                    intent2.putExtra("information",info);
+                    startActivityForResult(intent2,20);
                     break;
+
             }
+
             dlDrawer.closeDrawer(lvNavList);
         }
     }
@@ -146,6 +142,7 @@ public class NMapViewer extends NMapActivity {
 
         setContentView(R.layout.main);
         mMapView = (NMapView) findViewById(R.id.mapView);
+        exp = (ProgressBar)findViewById(R.id.progressBar);
 
         lvNavList = (ListView) findViewById(R.id.lv_activity_main_nav_list);
         dlDrawer = (DrawerLayout) findViewById(R.id.dl_activity_main_drawer);
@@ -153,6 +150,7 @@ public class NMapViewer extends NMapActivity {
         lvNavList.setOnItemClickListener(new NMapViewer.DrawerItemClickListener());
 
         // set a registered Client Id for Open MapViewer Library
+
         mMapView.setClientId(CLIENT_ID);
 
         // initialize map view
@@ -582,13 +580,16 @@ public class NMapViewer extends NMapActivity {
 
                 if(distance < 10){
                     int p = (int)(Math.random() * 100);
-                    String geo = Double.toString(lat) + "  " + Double.toString(lon);
+                    String geo = Double.toString(lat) + " " + Double.toString(lon);
                     ListItem listitem = new ListItem(getApplicationContext(),"ItemLog.db",null,1);
-                    listitem.insert(geo,p);
-                    toastShow("GET ITEM!! " + Integer.toString(p));
+                    String isvalid = listitem.getResult();
+                    if(isvalid.contains(geo)) toastShow("Fail : Already Exist");
+                    else {
+                        listitem.insert(geo,p);
+                        toastShow("GET ITEM!! " + Integer.toString(p));
+                    }
                 }
                 else toastShow("Fail : " + Double.toString(distance));
-
             }
         }
 

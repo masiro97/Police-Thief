@@ -31,6 +31,5 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp" />
 
-
 </android.support.v4.widget.DrawerLayout>
 

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="30dp"
+    tools:context="com.example.user.masiro.InformationActivity">
+
+    <TextView
+        android:textSize="20dp"
+        android:layout_marginBottom="50dp"
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textColor="#1a22ff"
+        android:text="PRIVATE INFORMATION" />
+
+    <TextView
+        android:textSize="15dp"
+        android:id="@+id/textViewid"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="USER ID : " />
+
+    <TextView
+        android:textSize="15dp"
+        android:id="@+id/textViewnick"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="USER ENCODE_ID : " />
+
+    <TextView
+        android:textSize="15dp"
+        android:id="@+id/textViewname"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="USER NAME : " />
+
+    <TextView
+        android:textSize="15dp"
+        android:id="@+id/textViewage"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="USER AGE : " />
+
+    <TextView
+        android:textSize="15dp"
+        android:id="@+id/textViewemail"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="USER EMAIL : " />
+
+    <TextView
+        android:textSize="15dp"
+        android:id="@+id/textViewbirth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="USER BIRTHDAY : " />
+
+
+</LinearLayout>

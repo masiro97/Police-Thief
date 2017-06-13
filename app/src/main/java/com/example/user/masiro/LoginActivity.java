@@ -22,7 +22,9 @@ import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -35,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     private static String OAUTH_CLIENT_ID = "uKeUnl_BDXO0Qx6FIpsd";
     private static String OAUTH_CLIENT_SECRET = "adVHUoX1Gd";
     private static String OAUTH_CLIENT_NAME = "Rodedown";
+
+    final int _REQUEST_MSG_CODE = 10;
 
     private TextView mApiResultText;
     private static OAuthLogin mOAuthLoginInstance;
@@ -58,6 +62,11 @@ public class LoginActivity extends AppCompatActivity {
     String id = "";
     String name = "";
     String birthday = "";
+    String information = "";
+
+    public void toastShow(String msg) {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +89,7 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+
         AlertDialog.Builder dlg = new AlertDialog.Builder(this);
         dlg.setTitle("Rodedown");
         dlg.setMessage(about);
@@ -93,16 +103,17 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                new RequestApiTask().execute();
                 if(isLogin){
                     Intent intent = new Intent(LoginActivity.this,NMapViewer.class);
                     startActivity(intent);
+                    intent.putExtra("information",information);
+                    startActivityForResult(intent,_REQUEST_MSG_CODE);
                     finish();
                 }
+                else toastShow("로그인을 해주세요");
 
             }
         });
-
     }
 
     private void initData() {
@@ -117,6 +128,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initView() {
+
         mApiResultText = (TextView) findViewById(R.id.api_result_text);
         et = (EditText)findViewById(R.id.editText);
         et.setText(id);
@@ -137,9 +149,11 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void run(boolean success) {
             if (success) {
+
                 isLogin = true;
                 et.setText(id);
                 Toast.makeText(mContext,"Login에 성공했습니다",Toast.LENGTH_SHORT).show();
+                new RequestApiTask().execute();
 
             } else {
 
@@ -261,5 +275,6 @@ public class LoginActivity extends AppCompatActivity {
         email = f_array[7];
         birthday = f_array[8];
 
+        information = id +"," + enc_id + "," + name + "," + age + "," + email + "," + birthday;
     }
 }

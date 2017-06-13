@@ -1,20 +1,21 @@
 package com.example.user.masiro;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+
 import java.util.ArrayList;
 
-public class DrawerItem extends AppCompatActivity {
-
+public class ItemActivity extends AppCompatActivity {
     ListView list;
     ArrayList<Item> info = new ArrayList<Item>();
     NAdapter adapter;
 
     public void OnButton(View v){
 
-        ListItem listitem = new ListItem(getApplicationContext(),"ItemData.db",null,1);
+        ListItem listitem = new ListItem(getApplicationContext(),"ItemLog.db",null,1);
         listitem.deleteAll();
         info.clear();
         adapter.notifyDataSetChanged();
@@ -24,10 +25,12 @@ public class DrawerItem extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_drawer_item);
+        setContentView(R.layout.activity_item);
+
         list = (ListView)findViewById(R.id.listview);
 
-        ListItem listitem = new ListItem(getApplicationContext(),"ItemData.db",null,1);
+        ListItem listitem = new ListItem(getApplicationContext(),"ItemLog.db",null,1);
+
         String result = listitem.getResult();
         String[] itemstring = result.split("\n");
 

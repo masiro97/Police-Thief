@@ -18,12 +18,12 @@ public class ListItem extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sql = "Create table if not exists ItemLog (" +
+
+        String sql = "Create table if not exists ItemLog(" +
                 "id integer primary key autoincrement," +
                 "GeoPoint text not null," +
                 "point integer not null);";
         db.execSQL(sql);
-
     }
 
     @Override
@@ -32,7 +32,6 @@ public class ListItem extends SQLiteOpenHelper {
             onCreate(db);
     }
 
-
     public void insert(String GeoPoint, int point){
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("insert into ItemLog values(null,'" + GeoPoint + "'," + point +");");
@@ -40,9 +39,9 @@ public class ListItem extends SQLiteOpenHelper {
 
     }
 
-    public void delete(String id){
+    public void deleteAll(){
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("delete from ItemLog where id =" + id + ";");
+        db.execSQL("delete from ItemLog");
     }
 
     public String getResult(){
@@ -54,9 +53,7 @@ public class ListItem extends SQLiteOpenHelper {
         while(cursor.moveToNext()){
             result += cursor.getString(0) + ":" + cursor.getString(1) + "," +cursor.getString(2) + "\n";
         }
-
         return result;
     }
-
 
 }

@@ -6,87 +6,47 @@ package com.example.user.masiro;
 
 public class Person  {
 
-    String ID = "";
-    String Password = "";
-    int point = 0;
-    int total_point = 0;
-    int index = -1; //저장된 정보의 인덱스 아이디 확인 할때 사용
-    int count = 0; //잡은 횟수, 훔친 횟수
-    int total_count = 0;
-    int identity = -1; // identity = 0 (theif) identity = 1 (police)
+    private int level;
+    private int curpoint;
+    private int totpoint;
+    private int required_exp = (int) (200 * Math.pow(1.5,level));
 
-    public Person(String ID, String password, int identity) {
-        this.ID = ID;
-        Password = password;
-        this.point = 0;
-        this.total_point = 0;
-        this.index = -1;
-        this.count = 0;
-        this.total_count = 0;
-        this.identity = identity;
+    public int getLevel() {
+        return level;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setLevel(int level) {
+        this.level = level;
     }
 
-    public void setPassword(String password) {
-        Password = password;
+    public int getRequired_exp() {
+        return required_exp;
     }
 
-    public void setPoint(int point) {
-        this.point = point;
+    public void setRequired_exp(int required_exp) {
+        this.required_exp = required_exp;
     }
 
-    public void setTotal_point(int total_point) {
-        this.total_point = total_point;
+    public int getCurpoint() {
+        return curpoint;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    public Person(int level, int curpoint, int totpoint) {
+        this.level = level;
+        this.curpoint = curpoint;
+        this.totpoint = totpoint;
+        this.required_exp = (int) (200 * Math.pow(1.5,level));
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setCurpoint(int curpoint) {
+        this.curpoint = curpoint;
     }
 
-    public void setTotal_count(int total_count) {
-        this.total_count = total_count;
+    public int getTotpoint() {
+        return totpoint;
     }
 
-    public void setIdentity(int identity) {
-        this.identity = identity;
-    }
-
-    public String getID() {
-        return ID;
-    }
-
-    public String getPassword() {
-        return Password;
-    }
-
-    public int getPoint() {
-        return point;
-    }
-
-    public int getTotal_point() {
-        return total_point;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public int getTotal_count() {
-        return total_count;
-    }
-
-    public int getIdentity() {
-        return identity;
+    public void setTotpoint(int totpoint) {
+        this.totpoint = totpoint;
     }
 }

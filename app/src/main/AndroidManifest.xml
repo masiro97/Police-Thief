@@ -34,11 +34,15 @@
         <activity
             android:name=".NMapViewer"
             android:configChanges="keyboardHidden|orientation"
-            android:theme="@android:style/Theme.Holo.Light.DarkActionBar" >
-
+            android:theme="@android:style/Theme.Holo.Light.DarkActionBar">
 
         </activity>
         <activity android:name=".LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
         <activity
@@ -49,15 +53,12 @@
             android:label="OAuth2.0 In-app" />
         <!-- [naveroauthlogin][end] -->
 
-        <activity android:name=".DrawerItem">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity android:name=".DrawerItem"></activity>
+        <activity android:name=".MainActivity">
 
         </activity>
+        <activity android:name=".InformationActivity"></activity>
+        <activity android:name=".ItemActivity"></activity>
     </application>
 
 </manifest>

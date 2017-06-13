@@ -40,8 +40,6 @@ public class NAdapter extends BaseAdapter {
         return position;
     }
 
-
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null) convertView = LayoutInflater.from(context).inflate(R.layout.list_item,null);
@@ -51,7 +49,7 @@ public class NAdapter extends BaseAdapter {
 
         Item item = arr.get(position);
         geo.setText(item.getGeopoint());
-        point.setText(item.getPoint());
+        point.setText("point : " + Integer.toString(item.getPoint()));
 
         return convertView;
     }

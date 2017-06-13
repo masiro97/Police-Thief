@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fillViewport="true"
-    android:padding="20dp"
+    android:padding="30dp"
     tools:context="com.example.user.masiro.LoginActivity">
 
     <LinearLayout
@@ -14,6 +14,7 @@
         android:orientation="vertical">
 
             <TextView
+                android:layout_marginBottom="10dp"
                 android:layout_marginLeft="5dp"
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
@@ -54,7 +55,8 @@
 
             <Button
                 android:id="@+id/buttonOAuthLogout"
-                style="@style/Button.Menu"
+                android:layout_width="240dp"
+                android:layout_height="50dp"
                 android:text="로그아웃" />
 
         </LinearLayout>
@@ -75,9 +77,11 @@
         </LinearLayout>
 
         <Button
+            android:layout_marginBottom="150dp"
             android:id="@+id/button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="240dp"
+            android:layout_height="50dp"
             android:text="GAME START" />
 
     </LinearLayout>

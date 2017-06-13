@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.user.masiro.DrawerItem">
-
+    tools:context="com.example.user.masiro.ItemActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
@@ -37,6 +36,5 @@
         android:divider="#000000"
         android:dividerHeight="1dp"
         android:textFilterEnabled="true" />
-
 
 </LinearLayout>
