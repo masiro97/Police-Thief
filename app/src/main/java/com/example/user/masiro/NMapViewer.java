@@ -61,7 +61,6 @@ public class NMapViewer extends NMapActivity {
     // set your Client ID which is registered for NMapViewer library.
     private static final String CLIENT_ID = "uKeUnl_BDXO0Qx6FIpsd";
 
-    private MapContainerView mMapContainerView;
     private NMapView mMapView;
     private NMapController mMapController;
 
@@ -253,6 +252,10 @@ public class NMapViewer extends NMapActivity {
             mMapView.setScalingFactor(2.0F, true);
         }
         mIsMapEnlared = mMapView.getMapProjection().isProjectionScaled();
+        mOverlayManager.clearOverlays();
+
+        // add POI data overlay
+        testPOIdataOverlay();
 
     }
 
@@ -319,7 +322,6 @@ public class NMapViewer extends NMapActivity {
 
                     mMapView.setAutoRotateEnabled(true, false);
 
-                    mMapContainerView.requestLayout();
                 } else {
                     stopMyLocation();
                 }
@@ -351,8 +353,6 @@ public class NMapViewer extends NMapActivity {
                 mMapCompassManager.disableCompass();
 
                 mMapView.setAutoRotateEnabled(false, false);
-
-                mMapContainerView.requestLayout();
             }
         }
     }

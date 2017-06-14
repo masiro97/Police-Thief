@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -49,12 +50,20 @@ public class ItemActivity extends AppCompatActivity {
         String result = listitem.getResult();
         String[] itemstring = result.split("\n");
 
-        for(int i = 0 ; i < itemstring.length; i++){
-            String[] index = itemstring[i].split(":");
-            String[] sub = index[1].split(",");
-            Item item = new Item(sub[0],Integer.parseInt(sub[1]));
-            info.add(item);
+
+        if(result.equals("")) {
+            Toast.makeText(getApplicationContext(),"확득한 아이템이 없습니다",Toast.LENGTH_SHORT).show();
         }
+        else{
+
+            for(int i = 0 ; i < itemstring.length; i++){
+                String[] index = itemstring[i].split(":");
+                String[] sub = index[1].split(",");
+                Item item = new Item(sub[0],Integer.parseInt(sub[1]));
+                info.add(item);
+            }
+        }
+
 
         adapter = new NAdapter(info,this);
         list.setAdapter(adapter);
