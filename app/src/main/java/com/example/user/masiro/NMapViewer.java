@@ -88,7 +88,7 @@ public class NMapViewer extends NMapActivity {
 
     //Drawer
 
-    private final String[] navItems = {"SAVE", "ITEM LIST", "PRIVATE INFORMATION"};
+    private final String[] navItems = {"SAVE", "ITEM LIST", "PRIVATE INFORMATION", "EXIT"};
 
     private ListView lvNavList;
     private DrawerLayout dlDrawer;
@@ -153,6 +153,9 @@ public class NMapViewer extends NMapActivity {
                     intent2.putExtra("information", info);
                     startActivityForResult(intent2, 20);
                     break;
+
+                case 3:
+                    finishAffinity();
             }
 
             dlDrawer.closeDrawer(lvNavList);
